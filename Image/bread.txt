@@ -1,0 +1,3 @@
+    language_instruction="It's good bread."
+    select_instruction="cell phone"
+    grounding_instruction="bread"
