@@ -1,2 +1,2 @@
-#GPT_DETR_GLIGEN
+# GPT_DETR_GLIGEN
 test.py
