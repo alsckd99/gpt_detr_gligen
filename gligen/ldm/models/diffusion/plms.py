@@ -5,6 +5,7 @@ from functools import partial
 from copy import deepcopy
 from ldm.modules.diffusionmodules.util import make_ddim_sampling_parameters, make_ddim_timesteps, noise_like
 from ldm.util import default_device
+import sys
 
 device = default_device()
 
@@ -114,7 +115,6 @@ class PLMSSampler(object):
     def p_sample_plms(self, input, t, index, guidance_scale=1., uc=None, old_eps=None, t_next=None):
         x = deepcopy(input["x"]) 
         b = x.shape[0]
-
         def get_model_output(input):
             e_t = self.model(input) 
             if uc is not None and guidance_scale != 1:

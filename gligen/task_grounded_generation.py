@@ -19,6 +19,7 @@ import random
 import sys
 import torchvision.transforms as T
 
+
 device = default_device()
 
 
@@ -58,12 +59,13 @@ def alpha_generator(length, type=[1,0,0]):
     return alphas
 
 
+
 def draw_box(img, locations):
     colors = ["red", "green", "blue", "olive", "orange", "brown", "cyan", "purple"]
     draw = ImageDraw.Draw(img)
     WW,HH = img.size
     for bid, box in enumerate(locations):
-        draw.rectangle([box[0]*WW, box[1]*HH, box[2]*WW, box[3]*HH], outline =colors[bid % len(colors)], width=5)
+        draw.rectangle([box[0]*WW, box[1]*HH, box[2]*WW, box[3]*HH], outline =colors[bid % len(colors)], width=2)
     return img 
 
 def load_ckpt(config, state_dict):
@@ -248,32 +250,31 @@ def grounded_generation_box(loaded_model_list, instruction, *args, **kwargs):
 
 
     # ------------- other logistics ------------- #
-    os.makedirs( os.path.join(save_folder, 'images'), exist_ok=True)
-    os.makedirs( os.path.join(save_folder, 'layout'), exist_ok=True)
-    os.makedirs( os.path.join(save_folder, 'overlay'), exist_ok=True)
+    #os.makedirs( os.path.join(save_folder, 'images'), exist_ok=True)
+    #os.makedirs( os.path.join(save_folder, 'layout'), exist_ok=True)
+    #os.makedirs( os.path.join(save_folder, 'overlay'), exist_ok=True)
 
-    start = len(  os.listdir(os.path.join(save_folder, 'images')) )
-    image_ids = list(range(start,start+batch_size))
+    #start = len(  os.listdir(os.path.join(save_folder, 'images')) )
+    #image_ids = list(range(start,start+batch_size))
 
     sample_list = []
     overlay_list = []
-    for image_id, sample in zip(image_ids, samples_fake):
-        # save in local
-        img_name = str(int(image_id))+'.png'
-
+    #for image_id,sample in  zip(image_ids,samples_fake):
+    #    img_name = str(int(image_id))+'.png'
+    for sample in samples_fake:
         sample = torch.clamp(sample, min=-1, max=1) * 0.5 + 0.5
         sample = sample.cpu().numpy().transpose(1,2,0) * 255 
         sample = Image.fromarray(sample.astype(np.uint8))
         overlay = draw_box(sample.copy(), instruction['locations'])
 
-        sample.save(os.path.join(save_folder, "images", img_name))
-        overlay.save(os.path.join(save_folder, "overlay", img_name))
+        #sample.save(os.path.join(save_folder, "images", img_name))
+        #overlay.save(os.path.join(save_folder, "overlay", img_name))
 
         # demo output 
         sample_list.append(sample)
         overlay_list.append(overlay)
 
-    return sample_list, overlay_list
+    return sample
         
 
 
